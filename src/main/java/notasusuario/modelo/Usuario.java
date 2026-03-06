@@ -28,6 +28,15 @@ public class Usuario {
     throw new IllegalArgumentException("Se ha insertado un email no válido");
   }
 
+  public String curarEmail(){
+    String[] partesEmail = this.getEmail().split("[@.]");
+    StringBuilder emailCurado = new StringBuilder();
+    for (String s : partesEmail) {
+      emailCurado.append(s);
+    }
+    return emailCurado.toString();
+  }
+
   public String getNombre() {
     return this.nombre;
   }

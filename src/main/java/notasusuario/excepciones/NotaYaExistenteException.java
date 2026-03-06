@@ -7,15 +7,8 @@ public class NotaYaExistenteException extends Exception {
         super("La nota '"+nota+"' que desea crear ya existe");
     }
 
-    public boolean getConfirmacion(Scanner sc){
-        System.out.print("Desea crear otro archivo? Responda afirmativamente con 1. Cualquier otro caracter se considerará una negación");
-        try{
-            sc.nextLine();
-            int confirmacion = Integer.parseInt(sc.nextLine());
-            return confirmacion == 1;
-        }
-        catch(Exception e){
-            return false;
-        }
+    public boolean getConfirmacion(int i){
+        System.out.print("Desea crear otro archivo? Responda afirmativamente con 1 para afirmar, 2 para negar.");
+        return i == 1;
     }
 }

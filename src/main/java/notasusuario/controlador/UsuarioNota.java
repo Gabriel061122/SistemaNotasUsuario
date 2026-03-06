@@ -1,132 +1,47 @@
 package notasusuario.controlador;
 
+import notasusuario.archivos.ArchivoNota;
+import notasusuario.excepciones.NotaNoExistenteException;
 import notasusuario.excepciones.NotaYaExistenteException;
 import notasusuario.modelo.Nota;
 import notasusuario.modelo.Usuario;
 import notasusuario.vista.Consola;
 
-import java.io.BufferedWriter;
+
+
 import java.io.IOException;
-import java.nio.file.Files;
+
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 public class UsuarioNota {
 
-  static final Path rutaData = Path.of("..", "data");
 
-  public static void crearNotaNueva(Usuario usuario, Scanner sc) throws NotaYaExistenteException{
+
+  public static void crearNotaNueva(Usuario usuario, ArchivoNota archn) throws NotaYaExistenteException{
       try {
-          String nombreNota = sc.nextLine();
-          Path rutaFichero = rutaData.resolve(Path.of(curarEmail(usuario), nombreNota + ".txt"));
-          if (Files.exists(rutaFichero)) {
-              throw new NotaYaExistenteException(nombreNota);
-          } else{
-              try (BufferedWriter writer = Files.newBufferedWriter(rutaFichero)) {
+          Nota nota = Consola.crearNota();
+          nota.setLineas(Consola.getLineas());
+          archn.archivarNota(nota);
+      }catch (IOException e) {
+          throw new RuntimeException(e);
+      }
+  }
 
-                    List<String> lineas = getLineas(sc);
-                    for (String line : lineas) {
-                        writer.write(line);
-                    }
-              } catch (Exception e) {
-                  System.out.println("Lo siento, no se ha podido completar la escritura de la notapor el siguiente error: \n" + e.getMessage());
-              }
+
+  public void editarNota(Nota nota, ArchivoNota archn) throws IOException {
+      if (archn.existeArchivo(nota.getTitulo() + ".txt")) {
+          try {
+              Consola.modificarLinea(nota);
+              archn.archivarNota(nota);
+          } catch (IOException e) {
+              throw new IOException(e);
           }
-      }catch(NotaYaExistenteException e){
-          e.getConfirmacion(sc);
+      } else {
+          throw new NotaNoExistenteException(nota.getTitulo());
       }
   }
+  
 
 
-  public static void editarNota(Path rutaNota, Scanner sc) {
-        if (Files.exists(rutaNota)) {
-            String lineaAEscribir = "";
-            ArrayList<String> lineas = Parser.lineaALinea(rutaNota);
-            Consola.mostrarLineas(lineas);
-
-            System.out.println("Inserte el número de la línea que quiere sobreescribir");
-
-            int numeroOpciones = lineas.size();
-            int opcion = Opciones.obtenerOpcion(numeroOpciones, sc);
-            lineaAEscribir = sc.nextLine();
-            lineas.set(opcion, lineaAEscribir + "\n");
-
-            sobreescribirNota(rutaNota, lineas);
-
-        } else{
-            System.out.println("La ruta que ha pasado no existe");
-        }
-
-
-  }
-
-
-  public static void sobreescribirNota(Path rutaNota, List<String> lineas) {
-      try (BufferedWriter writer = Files.newBufferedWriter(rutaNota)){
-          for (String line : lineas) {
-              writer.write(line);
-          }
-      } catch (Exception e) {
-          System.out.println(e.getMessage());
-      }
-  }
-
-  private Path obtenerRutaUsuario(Usuario usuario){
-    return rutaData.resolve(Path.of("usuarios", curarEmail(usuario)));
-  }
-
-  public static String curarEmail(Usuario usuario){
-    String[] partesEmail = usuario.getEmail().split("[@.]");
-    StringBuilder emailCurado = new StringBuilder();
-      for (String s : partesEmail) {
-          emailCurado.append(s);
-      }
-    return emailCurado.toString();
-  }
-
-  public static List<String> getLineas(Scanner sc){
-
-      String patron = ":q";
-      Pattern pattern = Pattern.compile(patron);
-
-      ArrayList<String> lineas = new ArrayList<>();
-
-      System.out.println("\n Ingrese las notas que desea escribir. Pulse ENTER para saltar de línea. escriba ':q' para salir del modo escritura\n");
-      while (true){
-          String linea =  sc.nextLine();
-          Matcher matcher = pattern.matcher(linea);
-          if(matcher.find()){
-              linea = linea.replaceFirst(patron, "");
-              lineas.add(linea + "\n");
-              return lineas;
-          } else {
-              lineas.add(linea + "\n");
-          }
-
-      }
-  }
-
-  public void aniadirRegistroNota(String nombreNota, Path carpetaUsuario) throws NotaYaExistenteException, IOException {
-      Path registry = carpetaUsuario.resolve("registry.txt");
-
-      ArrayList<String> lineas = Parser.lineaALinea(registry);
-      for (String line : lineas) {
-          if (line.equals(nombreNota)){
-              throw new NotaYaExistenteException(nombreNota);
-          }
-      }
-
-      try (BufferedWriter writer = Files.newBufferedWriter(registry, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
-
-            writer.write(nombreNota);
-      } catch (Exception e) {
-          throw e;
-      }
-  }
 }

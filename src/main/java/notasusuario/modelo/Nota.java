@@ -1,14 +1,22 @@
 package notasusuario.modelo;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Nota {
 
   String titulo;
-  private ArrayList<String> lineas = new ArrayList<>();
+  private List<String> lineas;
 
   public Nota(String titulo) {
     this.titulo = titulo;
+  }
+
+  public String getTitulo() {
+    return titulo;
+  }
+
+  public String getNombreArchivo(){
+    return getTitulo() + ".txt";
   }
 
   public void addLinea(String linea) {
@@ -19,7 +27,11 @@ public class Nota {
     return this.lineas.get(index);
   }
 
-  public ArrayList<String> getLineas() {
+  public List<String> getLineas() {
     return this.lineas;
+  }
+
+  public void setLineas(List<String> lineas) {
+    this.lineas = lineas;
   }
 }

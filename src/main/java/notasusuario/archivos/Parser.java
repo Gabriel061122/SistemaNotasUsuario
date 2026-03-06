@@ -1,11 +1,8 @@
-package notasusuario.controlador;
-
-import notasusuario.modelo.Usuario;
+package notasusuario.archivos;
 
 import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Parser {

@@ -1,26 +1,26 @@
 package notasusuario.vista;
 
-import notasusuario.controlador.Parser;
+import notasusuario.archivos.Parser;
+import notasusuario.modelo.Nota;
+import notasusuario.modelo.Usuario;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Consola {
+
+    static Scanner sc = new Scanner(System.in);
 
     public static void mostrarLineas(List<String> lineas){
         for (int i = 0; i < lineas.size(); i++) {
             System.out.println(i+1 + " - " + lineas.get(i));
         }
-    }
-
-    public static void mostrarNotas(Path rutaUsuario){
-        Path rutaRegistry = rutaUsuario.resolve("registry.txt");
-        mostrarLineas(Parser.lineaALinea(rutaRegistry));
     }
 
     public static void imprimirNota(Path rutaArchivo){
@@ -34,5 +34,62 @@ public class Consola {
             System.out.println(e.getMessage());
 
         }
+    }
+
+    public static int obtenerOpcion(int limite) {
+        while(true){
+            try{
+                int numero = sc.nextInt();
+                if (numero < limite && numero > 0){
+                    return numero;
+                }
+                System.out.println("\n Introduzca un número dentro del límite establecido, por favor");
+            } catch (Exception e) {
+                System.out.println("\n Introduzca un valor válido, por favor");
+            }
+        }
+    }
+
+    public static Usuario crearUsuario(){
+        System.out.println("\nIntroduce el nombre del usuario");
+        String nombre = sc.nextLine();
+        System.out.println("Introduce el email del usuario");
+        String email = sc.nextLine();
+
+        return new Usuario(nombre, email);
+    }
+
+    public static List<String> getLineas(){
+
+        String patron = ":q";
+        Pattern pattern = Pattern.compile(patron);
+
+        ArrayList<String> lineas = new ArrayList<>();
+
+        System.out.println("\n Ingrese las notas que desea escribir. Pulse ENTER para saltar de línea. escriba ':q' para salir del modo escritura\n");
+        while (true){
+            String linea =  sc.nextLine();
+            Matcher matcher = pattern.matcher(linea);
+            if(matcher.find()){
+                linea = linea.replaceFirst(patron, "");
+                lineas.add(linea + "\n");
+                return lineas;
+            } else {
+                lineas.add(linea + "\n");
+            }
+
+        }
+    }
+
+    public static Nota crearNota(){
+        return new Nota(sc.nextLine());
+    }
+
+    public static Nota modificarLinea(Nota nota){
+        mostrarLineas(nota.getLineas());
+        int opcion = obtenerOpcion(nota.getLineas().size()) - 1;
+        System.out.println("\n Ingrese la nueva línea que desea escribir (la anterior será sobreescrita)");
+        nota.getLineas().set(opcion, sc.nextLine());
+        return nota;
     }
 }

@@ -1,0 +1,6 @@
+notasusuario/vista/Consola.class
+notasusuario/archivos/Parser.class
+notasusuario/archivos/ArchivoNota.class
+notasusuario/excepciones/NotaNoExistenteException.class
+notasusuario/excepciones/UsuarioNoEncontradoException.class
+notasusuario/excepciones/NotaYaExistenteException.class
