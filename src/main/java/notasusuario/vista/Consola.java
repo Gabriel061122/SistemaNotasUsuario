@@ -1,6 +1,5 @@
 package notasusuario.vista;
 
-import notasusuario.archivos.Parser;
 import notasusuario.modelo.Nota;
 import notasusuario.modelo.Usuario;
 
@@ -21,6 +20,10 @@ public class Consola {
         for (int i = 0; i < lineas.size(); i++) {
             System.out.println(i+1 + " - " + lineas.get(i));
         }
+    }
+
+    public static void imprimirMensajeExcepcion(Exception e){
+        System.out.println(e.getMessage());
     }
 
     public static void imprimirNota(Path rutaArchivo){
@@ -85,11 +88,12 @@ public class Consola {
         return new Nota(sc.nextLine());
     }
 
-    public static Nota modificarLinea(Nota nota){
+    public static void modificarLinea(Nota nota){
         mostrarLineas(nota.getLineas());
         int opcion = obtenerOpcion(nota.getLineas().size()) - 1;
         System.out.println("\n Ingrese la nueva línea que desea escribir (la anterior será sobreescrita)");
         nota.getLineas().set(opcion, sc.nextLine());
-        return nota;
     }
+
+
 }

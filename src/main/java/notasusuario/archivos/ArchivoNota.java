@@ -80,8 +80,26 @@ public class ArchivoNota {
         }
     }
     
-    public List<String> listaNotas(){
-        return Parser.lineaALinea(rutaUsuario.resolve("registry.txt"));
+    public List<String> listaNotas() throws IOException {
+        try{
+            return Parser.lineaALinea(rutaUsuario.resolve("registry.txt"));
+        }
+        catch (IOException e){
+            throw new IOException(e);
+        }
+    }
+
+    public Nota getNota(int index) throws IOException {
+        try{
+            List<String> notas = listaNotas();
+            String nombre = notas.get(index).replaceFirst("\\.txt$", "");
+            List<String> lineas = Parser.lineaALinea(rutaUsuario.resolve(notas.get(index)));
+            Nota nota = new Nota(nombre);
+            nota.setLineas(lineas);
+            return nota;
+        } catch (IOException e) {
+            throw new IOException(e);
+        }
     }
 
     public static ArchivoNota iniciarSesion(Usuario usuario, String contrasenia) throws IOException {

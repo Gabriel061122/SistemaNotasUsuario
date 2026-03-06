@@ -12,6 +12,7 @@ import notasusuario.vista.Consola;
 import java.io.IOException;
 
 import java.nio.file.Path;
+import java.util.List;
 
 
 public class UsuarioNota {
@@ -56,8 +57,28 @@ public class UsuarioNota {
         }
   }
 
-  public void aniadirANota(Nota nota) throws IOException {
-        
+  public void aniadirANota(Nota nota, List<String> lineas) throws IOException {
+        try {
+            archn.aniadirANota(lineas, nota);
+        } catch (IOException e) {
+            throw new IOException(e);
+        }
+  }
+
+  public void mostrarNotas() throws IOException {
+        try {
+            Consola.mostrarLineas(archn.listaNotas());
+        } catch (IOException e){
+            throw new IOException(e);
+        }
+  }
+
+  public void mostrarNota(Nota nota) throws IOException {
+        try{
+            Consola.mostrarLineas(archn.listaNotas());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
   }
 
 
