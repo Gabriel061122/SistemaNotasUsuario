@@ -76,6 +76,7 @@ public class Consola {
     }
 
     public static Nota crearNota(){
+        System.out.println("\nIntroduzca el nombre de su Nota");
         return new Nota(sc.nextLine());
     }
 
