@@ -16,9 +16,15 @@ import java.nio.file.Path;
 
 public class UsuarioNota {
 
+    private Usuario usuario;
+    private ArchivoNota archn;
 
+    public UsuarioNota(ArchivoNota archn, Usuario usuario) {
+        this.archn = archn;
+        this.usuario = usuario;
+    }
 
-  public static void crearNotaNueva(Usuario usuario, ArchivoNota archn) throws NotaYaExistenteException{
+  public void crearNotaNueva(Usuario usuario) throws NotaYaExistenteException{
       try {
           Nota nota = Consola.crearNota();
           nota.setLineas(Consola.getLineas());
@@ -41,7 +47,18 @@ public class UsuarioNota {
           throw new NotaNoExistenteException(nota.getTitulo());
       }
   }
-  
+
+  public void eliminarNota(Nota nota) throws IOException {
+        try {
+            archn.eliminarNota(nota.getNombreArchivo());
+        } catch (IOException e) {
+            throw new IOException(e);
+        }
+  }
+
+  public void aniadirANota(Nota nota) throws IOException {
+        
+  }
 
 
 }
