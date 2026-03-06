@@ -3,6 +3,7 @@ package notasusuario.controlador;
 import notasusuario.excepciones.NotaYaExistenteException;
 import notasusuario.modelo.Nota;
 import notasusuario.modelo.Usuario;
+import notasusuario.vista.Consola;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -43,8 +44,37 @@ public class UsuarioNota {
   }
 
 
-  public static void editarNota(Path rutaNota){
-      ArrayList<String> lineas = Parser.lineaALinea(rutaNota);
+  public static void editarNota(Path rutaNota, Scanner sc) {
+        if (Files.exists(rutaNota)) {
+            String lineaAEscribir = "";
+            ArrayList<String> lineas = Parser.lineaALinea(rutaNota);
+            Consola.mostrarLineas(lineas);
+
+            System.out.println("Inserte el número de la línea que quiere sobreescribir");
+
+            int numeroOpciones = lineas.size();
+            int opcion = Opciones.obtenerOpcion(numeroOpciones, sc);
+            lineaAEscribir = sc.nextLine();
+            lineas.set(opcion, lineaAEscribir + "\n");
+
+            sobreescribirNota(rutaNota, lineas);
+
+        } else{
+            System.out.println("La ruta que ha pasado no existe");
+        }
+
+
+  }
+
+
+  public static void sobreescribirNota(Path rutaNota, List<String> lineas) {
+      try (BufferedWriter writer = Files.newBufferedWriter(rutaNota)){
+          for (String line : lineas) {
+              writer.write(line);
+          }
+      } catch (Exception e) {
+          System.out.println(e.getMessage());
+      }
   }
 
   private Path obtenerRutaUsuario(Usuario usuario){
@@ -53,7 +83,7 @@ public class UsuarioNota {
 
   public static String curarEmail(Usuario usuario){
     String[] partesEmail = usuario.getEmail().split("[@.]");
-    StringBuilder emailCurado = new StringBuilder("");
+    StringBuilder emailCurado = new StringBuilder();
       for (String s : partesEmail) {
           emailCurado.append(s);
       }
