@@ -90,5 +90,14 @@ public class GestorUsuario {
         }
     }
 
+    public static Usuario crearUsuario(Scanner sc){
+        System.out.println("\nIntroduce el nombre del usuario");
+        String nombre = sc.nextLine();
+        System.out.println("Introduce el email del usuario");
+        String email = sc.nextLine();
+
+        return new Usuario(nombre, email);
+    }
+
 
 }
