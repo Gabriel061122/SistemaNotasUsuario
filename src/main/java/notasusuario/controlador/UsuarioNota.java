@@ -17,15 +17,13 @@ import java.util.List;
 
 public class UsuarioNota {
 
-    private Usuario usuario;
     private ArchivoNota archn;
 
-    public UsuarioNota(ArchivoNota archn, Usuario usuario) {
+    public UsuarioNota(ArchivoNota archn) {
         this.archn = archn;
-        this.usuario = usuario;
     }
 
-  public void crearNotaNueva(Usuario usuario) throws NotaYaExistenteException{
+  public void crearNotaNueva() throws NotaYaExistenteException{
       try {
           Nota nota = Consola.crearNota();
           nota.setLineas(Consola.getLineas());

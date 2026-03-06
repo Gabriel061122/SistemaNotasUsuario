@@ -53,15 +53,6 @@ public class Consola {
         }
     }
 
-    public static Usuario crearUsuario(){
-        System.out.println("\nIntroduce el nombre del usuario");
-        String nombre = sc.nextLine();
-        System.out.println("Introduce el email del usuario");
-        String email = sc.nextLine();
-
-        return new Usuario(nombre, email);
-    }
-
     public static List<String> getLineas(){
 
         String patron = ":q";
@@ -95,5 +86,45 @@ public class Consola {
         nota.getLineas().set(opcion, sc.nextLine());
     }
 
+    public static void mostrarMenuInicio(){
+        System.out.println("\nSeleccione una opción:");
+        System.out.println("1. Iniciar Sesión");
+        System.out.println("2. Registrarse");
+        System.out.println("3. Salir");
+    }
+
+    public static void mostrarMenuAcciones(){
+        System.out.println("\nSeleccione una opcion:");
+        System.out.println("1. Crear Nota");
+        System.out.println("2. Añadir a la Nota");
+        System.out.println("3. Modificar Nota");
+        System.out.println("4. Mostrar Notas");
+        System.out.println("5. Mostrar una nota");
+        System.out.println("6. Eliminar Nota");
+        System.out.println("7. Salir");
+    }
+
+    public static Usuario crearUsuario(){
+        try{
+            System.out.println("\nIntroduce el nombre del usuario");
+            String nombre = sc.nextLine();
+            System.out.println("\nIntroduce el email del usuario");
+            String email = sc.nextLine();
+
+            return new Usuario(nombre, email);
+        } catch (IllegalArgumentException e){
+            throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
+    public static String contrasenia(){
+        System.out.println("\nIntroduce la contraseña");
+            return sc.nextLine();
+    }
+
+    public static String email(){
+        System.out.println("\nIntroduce el email de tu usuario");
+        return sc.nextLine();
+    }
 
 }
