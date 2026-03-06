@@ -13,9 +13,10 @@ public class Controlador {
 
     public void iniciar() {
 
-        ArchivoNota archn;
-        UsuarioNota servicio;
-        boolean salir = false;
+        ArchivoNota archn = null;
+        UsuarioNota servicio = null;
+        boolean salirInicio = false;
+        boolean salirAcciones = false;
         while(true){
             Consola.mostrarMenuInicio();
             int opcion = Consola.obtenerOpcion(3);
@@ -23,10 +24,11 @@ public class Controlador {
                 case 1:
                     try{
                         archn = ArchivoNota.iniciarSesion(Consola.email(), Consola.contrasenia());
+                        servicio = new UsuarioNota(archn);
                     } catch (Exception e) {
                         Consola.imprimirMensajeExcepcion(e);
                     }
-                    break;
+
 
                 case 2:
                     try{
@@ -34,21 +36,74 @@ public class Controlador {
                         String contrasenia = Consola.contrasenia();
                         ArchivoNota.registrarUsuario(usuario, contrasenia);
                         archn = ArchivoNota.iniciarSesion(usuario.getEmail(), contrasenia);
+                        servicio = new UsuarioNota(archn);
                     } catch (Exception e) {
                         Consola.imprimirMensajeExcepcion(e);
                     }
                     break;
 
                 case 3:
-                    salir = true;
+                    salirInicio = true;
                     break;
 
             }
             break;
         }
-        while(!salir){
+
+        while(!salirInicio){
             Consola.mostrarMenuAcciones();
-            int opcion = Consola.obtenerOpcion(3);
+            int opcion = Consola.obtenerOpcion(7);
+            switch (opcion){
+                case 1:
+                    try{
+                        servicio.crearNotaNueva();
+                    }catch(Exception e){
+                        Consola.imprimirMensajeExcepcion(e);
+                    }
+                    break;
+
+                case 2:
+                    try{
+                        servicio.aniadirANota();
+                    }catch(Exception e){
+                        Consola.imprimirMensajeExcepcion(e);
+                    }
+                    break;
+                case 3:
+                    try{
+                        servicio.editarNota();
+                    }catch(Exception e){
+                        Consola.imprimirMensajeExcepcion(e);
+                    }
+                    break;
+                case 4:
+                    try{
+                        servicio.mostrarNotas();
+                    }catch(Exception e){
+                        Consola.imprimirMensajeExcepcion(e);
+                    }
+                    break;
+                case 5:
+                    try{
+                        servicio.mostrarNota();
+                    }catch(Exception e){
+                        Consola.imprimirMensajeExcepcion(e);
+                    }
+                    break;
+                case 6:
+                    try{
+                        servicio.eliminarNota();
+                    }catch(Exception e){
+                        Consola.imprimirMensajeExcepcion(e);
+                    }
+                    break;
+                case 7:
+                    salirAcciones = true;
+                    break;
+            }
+            if (salirAcciones){
+                break;
+            }
         }
         System.out.println("\nHasta luego");
     }

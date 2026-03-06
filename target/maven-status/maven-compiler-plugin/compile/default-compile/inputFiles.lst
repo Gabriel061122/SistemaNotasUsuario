@@ -1,6 +1,6 @@
-/Users/gabrielfranciscoruizbolanos/Documentos/Trabajos de la Escuela/Programación/capitulo5/SistemaNotasUsuario/src/main/java/notasusuario/App.java
 /Users/gabrielfranciscoruizbolanos/Documentos/Trabajos de la Escuela/Programación/capitulo5/SistemaNotasUsuario/src/main/java/notasusuario/archivos/ArchivoNota.java
 /Users/gabrielfranciscoruizbolanos/Documentos/Trabajos de la Escuela/Programación/capitulo5/SistemaNotasUsuario/src/main/java/notasusuario/archivos/Parser.java
+/Users/gabrielfranciscoruizbolanos/Documentos/Trabajos de la Escuela/Programación/capitulo5/SistemaNotasUsuario/src/main/java/notasusuario/controlador/Controlador.java
 /Users/gabrielfranciscoruizbolanos/Documentos/Trabajos de la Escuela/Programación/capitulo5/SistemaNotasUsuario/src/main/java/notasusuario/controlador/UsuarioNota.java
 /Users/gabrielfranciscoruizbolanos/Documentos/Trabajos de la Escuela/Programación/capitulo5/SistemaNotasUsuario/src/main/java/notasusuario/excepciones/NotaNoExistenteException.java
 /Users/gabrielfranciscoruizbolanos/Documentos/Trabajos de la Escuela/Programación/capitulo5/SistemaNotasUsuario/src/main/java/notasusuario/excepciones/NotaYaExistenteException.java
