@@ -1,17 +1,11 @@
 package notasusuario.controlador;
 
 import notasusuario.archivos.ArchivoNota;
-import notasusuario.excepciones.NotaNoExistenteException;
 import notasusuario.excepciones.NotaYaExistenteException;
 import notasusuario.modelo.Nota;
-import notasusuario.modelo.Usuario;
 import notasusuario.vista.Consola;
 
-
-
 import java.io.IOException;
-
-import java.nio.file.Path;
 import java.util.List;
 
 
@@ -27,6 +21,7 @@ public class UsuarioNota {
       try {
           Nota nota = Consola.crearNota();
           nota.setLineas(Consola.getLineas());
+          archn.aniadirRegistroNota(nota);
           archn.archivarNota(nota);
       }catch (IOException e) {
           throw new RuntimeException(e);
@@ -38,7 +33,7 @@ public class UsuarioNota {
         try {
             List<String> lista = archn.listaNotas();
             Consola.mostrarLineas(lista);
-            Nota nota = archn.getNota(Consola.obtenerOpcion(lista.size()-1));
+            Nota nota = archn.getNota(Consola.obtenerOpcion(lista.size()) - 1);
             Consola.modificarLinea(nota);
             archn.archivarNota(nota);
         } catch (IOException e) {
@@ -50,7 +45,7 @@ public class UsuarioNota {
         try {
             List<String> lista = archn.listaNotas();
             Consola.mostrarLineas(lista);
-            Nota nota = archn.getNota(Consola.obtenerOpcion(lista.size()-1));
+            Nota nota = archn.getNota(Consola.obtenerOpcion(lista.size()) - 1);
             archn.eliminarNota(nota.getNombreArchivo());
         } catch (IOException e) {
             throw new IOException(e);
@@ -61,7 +56,7 @@ public class UsuarioNota {
       try {
           List<String> lista = archn.listaNotas();
           Consola.mostrarLineas(lista);
-          Nota nota = archn.getNota(Consola.obtenerOpcion(lista.size()-1));
+          Nota nota = archn.getNota(Consola.obtenerOpcion(lista.size()) - 1);
           List<String> listaAAniadir = Consola.getLineas();
           archn.aniadirANota(listaAAniadir ,nota );
       } catch (IOException e) {
@@ -81,7 +76,7 @@ public class UsuarioNota {
         try{
             List<String> lista = archn.listaNotas();
             Consola.mostrarLineas(lista);
-            Nota nota = archn.getNota(Consola.obtenerOpcion(lista.size()-1));
+            Nota nota = archn.getNota(Consola.obtenerOpcion(lista.size()) - 1);
             Consola.mostrarLineas(nota.getLineas());
         } catch (IOException e) {
             throw new RuntimeException(e);

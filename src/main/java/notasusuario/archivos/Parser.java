@@ -14,13 +14,12 @@ public class Parser {
 
     public static ArrayList<String> lineaALinea(Path archivo) throws IOException{
         ArrayList<String> lista = new ArrayList<>();
-        try(BufferedReader br = Files.newBufferedReader(archivo)){
-            for (String linea = br.readLine(); br.readLine() != null; ) {
+        try (BufferedReader br = Files.newBufferedReader(archivo)) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
                 lista.add(linea);
             }
             return lista;
-        }catch(IOException e){
-            throw new IOException(e);
         }
     }
 }

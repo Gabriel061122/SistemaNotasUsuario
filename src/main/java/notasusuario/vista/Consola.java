@@ -27,15 +27,13 @@ public class Consola {
     }
 
     public static void imprimirNota(Path rutaArchivo){
-
-        try(BufferedReader br = Files.newBufferedReader(rutaArchivo)){
-            for (String linea = br.readLine(); br.readLine() != null; ) {
+        try (BufferedReader br = Files.newBufferedReader(rutaArchivo)) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
                 System.out.println(linea);
             }
-
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-
         }
     }
 
@@ -43,11 +41,13 @@ public class Consola {
         while(true){
             try{
                 int numero = sc.nextInt();
-                if (numero < limite && numero > 0){
+                sc.nextLine();
+                if (numero <= limite && numero > 0){
                     return numero;
                 }
                 System.out.println("\n Introduzca un número dentro del límite establecido, por favor");
             } catch (Exception e) {
+                sc.nextLine();
                 System.out.println("\n Introduzca un valor válido, por favor");
             }
         }

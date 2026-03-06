@@ -5,37 +5,31 @@ import notasusuario.modelo.Usuario;
 import notasusuario.vista.Consola;
 
 public class Controlador {
-    private UsuarioNota usuarioNota;
-
-    public Controlador(UsuarioNota usuarioNota) {
-        this.usuarioNota = usuarioNota;
-    }
-
     public void iniciar() {
 
-        ArchivoNota archn = null;
         UsuarioNota servicio = null;
         boolean salirInicio = false;
         boolean salirAcciones = false;
-        while(true){
+
+        while (!salirInicio && servicio == null) {
             Consola.mostrarMenuInicio();
             int opcion = Consola.obtenerOpcion(3);
-            switch (opcion){
+            switch (opcion) {
                 case 1:
-                    try{
-                        archn = ArchivoNota.iniciarSesion(Consola.email(), Consola.contrasenia());
+                    try {
+                        ArchivoNota archn = ArchivoNota.iniciarSesion(Consola.email(), Consola.contrasenia());
                         servicio = new UsuarioNota(archn);
                     } catch (Exception e) {
                         Consola.imprimirMensajeExcepcion(e);
                     }
-
+                    break;
 
                 case 2:
-                    try{
+                    try {
                         Usuario usuario = Consola.crearUsuario();
                         String contrasenia = Consola.contrasenia();
                         ArchivoNota.registrarUsuario(usuario, contrasenia);
-                        archn = ArchivoNota.iniciarSesion(usuario.getEmail(), contrasenia);
+                        ArchivoNota archn = ArchivoNota.iniciarSesion(usuario.getEmail(), contrasenia);
                         servicio = new UsuarioNota(archn);
                     } catch (Exception e) {
                         Consola.imprimirMensajeExcepcion(e);
@@ -45,64 +39,59 @@ public class Controlador {
                 case 3:
                     salirInicio = true;
                     break;
-
             }
-            break;
         }
 
-        while(!salirInicio){
+        while (!salirInicio && !salirAcciones && servicio != null) {
             Consola.mostrarMenuAcciones();
             int opcion = Consola.obtenerOpcion(7);
-            switch (opcion){
+            switch (opcion) {
                 case 1:
-                    try{
+                    try {
                         servicio.crearNotaNueva();
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         Consola.imprimirMensajeExcepcion(e);
                     }
                     break;
 
                 case 2:
-                    try{
+                    try {
                         servicio.aniadirANota();
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         Consola.imprimirMensajeExcepcion(e);
                     }
                     break;
                 case 3:
-                    try{
+                    try {
                         servicio.editarNota();
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         Consola.imprimirMensajeExcepcion(e);
                     }
                     break;
                 case 4:
-                    try{
+                    try {
                         servicio.mostrarNotas();
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         Consola.imprimirMensajeExcepcion(e);
                     }
                     break;
                 case 5:
-                    try{
+                    try {
                         servicio.mostrarNota();
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         Consola.imprimirMensajeExcepcion(e);
                     }
                     break;
                 case 6:
-                    try{
+                    try {
                         servicio.eliminarNota();
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         Consola.imprimirMensajeExcepcion(e);
                     }
                     break;
                 case 7:
                     salirAcciones = true;
                     break;
-            }
-            if (salirAcciones){
-                break;
             }
         }
         System.out.println("\nHasta luego");

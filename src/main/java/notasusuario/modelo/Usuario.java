@@ -9,14 +9,8 @@ public class Usuario {
   private String email;
 
   public Usuario(String nombre, String email) {
-    try {
-
-      this.nombre = nombre;
-      this.email = verificarMail(email);
-
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }
+    this.nombre = nombre;
+    this.email = verificarMail(email);
   }
 
   private String verificarMail(String email) {

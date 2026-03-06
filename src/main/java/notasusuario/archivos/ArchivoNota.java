@@ -3,11 +3,9 @@ package notasusuario.archivos;
 import notasusuario.excepciones.NotaYaExistenteException;
 import notasusuario.modelo.Nota;
 import notasusuario.modelo.Usuario;
-import notasusuario.vista.Consola;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOError;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,8 +17,8 @@ public class ArchivoNota {
 
     static Path rutaUsuarios = Path.of("../data/users.txt");
 
-    Usuario usuario;
-    Path rutaUsuario;
+    private Usuario usuario;
+    private Path rutaUsuario;
 
     public ArchivoNota(Usuario usuario){
         this.usuario = usuario;
@@ -29,7 +27,7 @@ public class ArchivoNota {
 
     public void archivarNota(Nota nota) throws IOException {
 
-        Path rutaFichero = rutaUsuario.resolve(nota.getTitulo());
+        Path rutaFichero = rutaUsuario.resolve(nota.getNombreArchivo());
 
         try (BufferedWriter writer = Files.newBufferedWriter(rutaFichero)) {
 
@@ -56,8 +54,8 @@ public class ArchivoNota {
         }
 
         try (BufferedWriter writer = Files.newBufferedWriter(registry, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
-
             writer.write(nota.getNombreArchivo());
+            writer.newLine();
         } catch (IOException e) {
             throw new IOException(e);
         }
@@ -103,52 +101,56 @@ public class ArchivoNota {
         }
     }
 
-    public static ArchivoNota iniciarSesion(String email, String contrasenia) throws Exception {
-        try {
-            Path rutaUsuarios = Path.of("../data/users.txt");
-            List<String> informacion = Parser.lineaALinea(rutaUsuarios);
+    public static ArchivoNota iniciarSesion(String email, String contrasenia) throws IOException {
+        Path rutaUsuarios = Path.of("../data/users.txt");
+        List<String> informacion = Parser.lineaALinea(rutaUsuarios);
 
-            if(informacion.isEmpty()){
-                throw new IOException("No se puede iniciar sesión");
-            }
-
-            for (String line : informacion) {
-                String[] infoLinea = Parser.parseLinea(line);
-                if (infoLinea[2].equals(contrasenia) && (infoLinea[0].equals(email) || infoLinea[1].equals(email))) {
-                    return new ArchivoNota(new Usuario(infoLinea[0], infoLinea[1]));
-                }
-            }
-            throw new IOException("No se encontró el usuario especificado");
-        } catch (IOException e) {
-            throw new IOException(e);
-        } catch (Exception e) {
-            throw new Exception(e);
+        if (informacion.isEmpty()) {
+            throw new IOException("No hay usuarios registrados");
         }
 
-
+        for (String line : informacion) {
+            String[] infoLinea = Parser.parseLinea(line);
+            if (infoLinea.length == 3 && infoLinea[2].equals(contrasenia)
+                    && (infoLinea[0].equals(email) || infoLinea[1].equals(email))) {
+                return new ArchivoNota(new Usuario(infoLinea[0], infoLinea[1]));
+            }
+        }
+        throw new IOException("No se encontró el usuario especificado");
     }
 
     public static void registrarUsuario(Usuario usuario, String contrasenia) throws IOException {
-        try(BufferedWriter bf = Files.newBufferedWriter(rutaUsuarios, StandardOpenOption.CREATE, StandardOpenOption.APPEND)){
-            if (!usuarioExistente(usuario)) {
-                bf.write(usuario.getNombre()+";"+usuario.getEmail()+";"+contrasenia);
-                Path carpetaPadre = rutaUsuarios.getParent();
-                Path carpetaUsuario = carpetaPadre.resolve(usuario.curarEmail());
-                Files.createDirectory(carpetaPadre.resolve(usuario.curarEmail()));
-                Files.createFile(carpetaUsuario.resolve("registry.txt"));
-            } else {
-                throw new IOException("Usuario ya existente");
-            }
-        } catch (IOException e) {
-            throw new IOException(e);
+        if (usuarioExistente(usuario)) {
+            throw new IOException("Usuario ya existente");
+        }
+
+        Path carpetaPadre = rutaUsuarios.getParent();
+        if (carpetaPadre == null) {
+            throw new IOException("No se pudo resolver el directorio de datos");
+        }
+        Path carpetaUsuario = carpetaPadre.resolve(usuario.curarEmail());
+        Path registry = carpetaUsuario.resolve("registry.txt");
+
+        Files.createDirectories(carpetaUsuario);
+        if (Files.notExists(registry)) {
+            Files.createFile(registry);
+        }
+
+        try (BufferedWriter bf = Files.newBufferedWriter(rutaUsuarios, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
+            bf.write(usuario.getNombre() + ";" + usuario.getEmail() + ";" + contrasenia);
+            bf.newLine();
         }
     }
 
     public static boolean usuarioExistente(Usuario usuario) throws IOException {
+        if (Files.notExists(rutaUsuarios)) {
+            return false;
+        }
         try (BufferedReader br = Files.newBufferedReader(rutaUsuarios)) {
-            for  (String linea = br.readLine(); linea != null; ) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
                 String email = Parser.parseLinea(linea)[1];
-                if(email.equals(usuario.getEmail())){
+                if (email.equals(usuario.getEmail())) {
                     return true;
                 }
             }
